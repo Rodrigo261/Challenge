@@ -19,9 +19,9 @@ import './styles.css';
 const API_KEY = '169e08953a55472f5953cd96b68237b5';
 const API_URL_WEATHER = 'https://api.openweathermap.org/data/2.5/weather';
 const API_URL_FORECAST = 'https://api.openweathermap.org/data/2.5/forecast';
-const HEATMAP_RADIUS = 25; // Raio do heatmap (ajuste conforme necessário)
+const HEATMAP_RADIUS = 25; 
 
-// Configuração do ícone do marcador do Leaflet
+
 const icon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -32,41 +32,41 @@ const icon = L.icon({
   shadowSize: [41, 41],
 });
 
-// Função para determinar a cor com base na temperatura
+
 const getTemperatureColor = (temp) => {
-  if (temp <= 4) return 'bg-blue-200';     // 4°C ou menos: Azul claro
-  if (temp > 4 && temp <= 8) return 'bg-yellow-200'; // 4°C a 8°C: Amarelo claro
-  if (temp > 8 && temp <= 12) return 'bg-orange-200'; // 8°C a 12°C: Laranja claro
-  return 'bg-red-200'; // 12°C ou mais: Vermelho claro
+  if (temp <= 4) return 'bg-blue-200';     
+  if (temp > 4 && temp <= 8) return 'bg-yellow-200'; 
+  if (temp > 8 && temp <= 12) return 'bg-orange-200';
+  return 'bg-red-200'; 
 };
 
-// Componente do Mapa com Heatmap
+
 const TemperatureMap = ({ city, temperatureData }) => {
   useEffect(() => {
     if (temperatureData && temperatureData.length > 0) {
-      const map = L.map('map').setView([city.coord.lat, city.coord.lon], 8); // Zoom inicial ajustado
+      const map = L.map('map').setView([city.coord.lat, city.coord.lon], 8); 
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      // Adiciona o heatmap com cores baseadas nos intervalos de temperatura
+      
       const heatmapLayer = L.heatLayer(
         temperatureData.map(point => [point.lat, point.lon, point.temp]),
         {
           radius: HEATMAP_RADIUS,
           gradient: {
-            0.0: 'blue',    // 4°C ou menos: Azul
-            0.3: 'yellow',  // 4°C a 8°C: Amarelo
-            0.6: 'orange',  // 8°C a 12°C: Laranja
-            1.0: 'red'      // 12°C ou mais: Vermelho
+            0.0: 'blue',    
+            0.3: 'yellow', 
+            0.6: 'orange',  
+            1.0: 'red'    
           },
-          max: Math.max(...temperatureData.map(point => point.temp)), // Define o valor máximo para o heatmap
-          min: Math.min(...temperatureData.map(point => point.temp)), // Define o valor mínimo para o heatmap
+          max: Math.max(...temperatureData.map(point => point.temp)), 
+          min: Math.min(...temperatureData.map(point => point.temp)), 
         }
       ).addTo(map);
 
-      // Adiciona um marcador para a cidade
+      
       L.marker([city.coord.lat, city.coord.lon], { icon }).addTo(map)
         .bindPopup(`<strong>${city.name}</strong><br>Temperature: ${temperatureData[0].temp.toFixed(1)}°C`)
         .openPopup();
@@ -80,7 +80,7 @@ const TemperatureMap = ({ city, temperatureData }) => {
   return <div id="map" style={{ height: '400px', width: '100%', marginTop: '20px' }} />;
 };
 
-// Componente Principal
+
 function App() {
   const [city, setCity] = useState('');
   const [weather, setWeather] = useState(null);
@@ -111,15 +111,15 @@ function App() {
 
       const { coord, main, name, weather: weatherDetails } = weatherResponse.data;
 
-      // Simula dados de temperatura para o heatmap
+      
       const tempData = [
-        { lat: coord.lat, lon: coord.lon, temp: main.temp }, // Cidade escolhida
-        { lat: coord.lat + 0.1, lon: coord.lon + 0.1, temp: main.temp + 2 }, // Ponto quente
-        { lat: coord.lat - 0.1, lon: coord.lon - 0.1, temp: main.temp - 2 }, // Ponto frio
-        { lat: coord.lat + 0.2, lon: coord.lon - 0.2, temp: main.temp + 1 }, // Ponto quente
-        { lat: coord.lat - 0.2, lon: coord.lon + 0.2, temp: main.temp - 1 }, // Ponto frio
-        { lat: coord.lat + 0.3, lon: coord.lon + 0.3, temp: main.temp + 3 }, // Ponto quente
-        { lat: coord.lat - 0.3, lon: coord.lon - 0.3, temp: main.temp - 3 }, // Ponto frio
+        { lat: coord.lat, lon: coord.lon, temp: main.temp }, 
+        { lat: coord.lat + 0.1, lon: coord.lon + 0.1, temp: main.temp + 2 }, 
+        { lat: coord.lat - 0.1, lon: coord.lon - 0.1, temp: main.temp - 2 }, 
+        { lat: coord.lat + 0.2, lon: coord.lon - 0.2, temp: main.temp + 1 }, 
+        { lat: coord.lat - 0.2, lon: coord.lon + 0.2, temp: main.temp - 1 }, 
+        { lat: coord.lat + 0.3, lon: coord.lon + 0.3, temp: main.temp + 3 }, 
+        { lat: coord.lat - 0.3, lon: coord.lon - 0.3, temp: main.temp - 3 }, 
       ];
       setTemperatureData(tempData);
 
